@@ -10,6 +10,9 @@ import {
 import Link from "next/link";
 
 const NewsDetailPage = ({ news }) => {
+  if (!news) {
+    return <p>Loading.....</p>;
+  }
   return (
     <div>
       <Row
@@ -31,7 +34,7 @@ const NewsDetailPage = ({ news }) => {
         </Col>
         <Col className="gutter-row" span={12}>
           <div>
-            <h1>{news?.title}</h1>
+            <h1 style={{ fontSize: "25px" }}>{news?.title}</h1>
             <div
               className="line"
               style={{
@@ -78,18 +81,18 @@ NewsDetailPage.getLayout = function getLayout(page) {
   return <RootLayout>{page}</RootLayout>;
 };
 
-export const getStaticPaths = async () => {
-  const res = await fetch("http://localhost:5000/news");
-  const newses = await res.json();
+// export const getStaticPaths = async () => {
+//   const res = await fetch("http://localhost:5000/news");
+//   const newses = await res.json();
 
-  const paths = newses.map((news) => ({
-    params: { newsId: news.id },
-  }));
+//   const paths = newses.map((news) => ({
+//     params: { newsId: news.id },
+//   }));
 
-  return { paths, fallback: false };
-};
+//   return { paths, fallback: false };
+// };
 
-export const getStaticProps = async (context) => {
+export const getServerSideProps = async (context) => {
   const { params } = context;
   const res = await fetch(`http://localhost:5000/news/${params.newsId}`);
   const data = await res.json();
